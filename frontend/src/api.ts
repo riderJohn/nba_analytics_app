@@ -1,4 +1,4 @@
-import { Team, GameResult, ScheduleGame, PredictRequest, PredictResponse } from './types'
+import { Team, GameResult, ScheduleGame, PredictRequest, PredictResponse, FullPredictRequest, FullPredictResponse, ParlayRequest, ParlayResponse } from './types'
 
 const BASE = '/api'
 
@@ -29,3 +29,9 @@ export const fetchSchedule = (date: string): Promise<ScheduleGame[]> =>
 
 export const predictGame = (req: PredictRequest): Promise<PredictResponse> =>
   post('/predict', req)
+
+export const predictFull = (req: FullPredictRequest): Promise<FullPredictResponse> =>
+  post('/predict/full', req)
+
+export const predictParlay = (req: ParlayRequest): Promise<ParlayResponse> =>
+  post('/predict/parlay', req)

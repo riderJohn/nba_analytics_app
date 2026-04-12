@@ -611,6 +611,358 @@ tbody td {
 .outcome-wrong    { color: var(--loss);  font-weight: 600; }
 
 /* ─────────────────────────────────────────────────────────
+   GAME GROUP BORDERS  (All view)
+───────────────────────────────────────────────────────── */
+tbody tr.group-start td {
+  border-top: 1px solid var(--accent) !important;
+  border-left: none;
+}
+tbody tr.group-start td:first-child {
+  border-left: 2px solid var(--accent);
+}
+tbody tr.group-start td:last-child {
+  border-right: 2px solid var(--accent);
+}
+tbody tr.group-end td {
+  border-bottom: 1px solid var(--accent) !important;
+}
+tbody tr.group-end td:first-child {
+  border-left: 2px solid var(--accent);
+}
+tbody tr.group-end td:last-child {
+  border-right: 2px solid var(--accent);
+}
+
+/* ─────────────────────────────────────────────────────────
+   TOGGLE GROUP  (Home / Away / All)
+───────────────────────────────────────────────────────── */
+.toggle-group {
+  display: flex;
+  border: 1px solid var(--input-border);
+  border-radius: 7px;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+}
+
+.toggle-btn {
+  background: var(--input-bg);
+  border: none;
+  border-right: 1px solid var(--input-border);
+  color: var(--muted);
+  padding: 0.45rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s;
+}
+
+.toggle-btn:last-child {
+  border-right: none;
+}
+
+.toggle-btn:hover:not(.active) {
+  color: var(--text);
+  background: var(--row-hover);
+}
+
+.toggle-btn.active {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+/* ─────────────────────────────────────────────────────────
+   PREDICT PAGE — input bar
+───────────────────────────────────────────────────────── */
+.predict-input-bar {
+  margin-bottom: 1.75rem;
+}
+
+.predict-input-bar .select-row {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.adv-link {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 0.78rem;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  transition: color 0.15s;
+}
+
+.adv-link:hover {
+  color: var(--text);
+}
+
+/* ─────────────────────────────────────────────────────────
+   PREDICT PAGE — prediction card
+───────────────────────────────────────────────────────── */
+.pred-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  backdrop-filter: blur(var(--panel-blur));
+  -webkit-backdrop-filter: blur(var(--panel-blur));
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.pred-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--panel-border);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pred-card-header strong {
+  color: var(--text);
+}
+
+.pred-winner-badge {
+  font-size: 0.78rem;
+  padding: 0.2rem 0.7rem;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.badge-home {
+  background: var(--tag-home-bg);
+  color: var(--accent);
+}
+
+.badge-away {
+  background: var(--tag-away-bg);
+  color: var(--muted);
+}
+
+.pred-card-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+@media (max-width: 700px) {
+  .pred-card-body {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.pred-col-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+  margin-bottom: 0.9rem;
+}
+
+/* Sub-rows: classifier / score model breakdown */
+.prob-sub-rows {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.prob-sub-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--muted);
+  padding: 0.15rem 0;
+}
+
+/* Score boxes */
+.score-boxes {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.score-box {
+  text-align: center;
+  padding: 0.6rem 1.1rem;
+  border-radius: 8px;
+  min-width: 72px;
+}
+
+.score-box-home {
+  background: var(--tag-home-bg);
+  border: 1px solid var(--accent);
+}
+
+.score-box-away {
+  background: var(--tag-away-bg);
+  border: 1px solid var(--panel-border);
+}
+
+.score-box-abbr {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  margin-bottom: 0.2rem;
+}
+
+.score-box-pts {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1;
+}
+
+.score-box-sep {
+  font-size: 1.4rem;
+  color: var(--muted);
+  font-weight: 300;
+}
+
+.score-meta {
+  display: flex;
+  gap: 1.25rem;
+  font-size: 0.84rem;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
+}
+
+.score-meta strong {
+  color: var(--text);
+}
+
+/* CI block */
+.ci-block {
+  margin-top: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  background: var(--input-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 7px;
+  padding: 0.6rem 0.85rem;
+}
+
+.ci-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.ci-row span:last-child {
+  font-family: monospace;
+  color: var(--text);
+  opacity: 0.8;
+}
+
+/* ─────────────────────────────────────────────────────────
+   PREDICT PAGE — parlay calculator
+───────────────────────────────────────────────────────── */
+.parlay-panel {
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  background: var(--panel-bg);
+  backdrop-filter: blur(var(--panel-blur));
+  -webkit-backdrop-filter: blur(var(--panel-blur));
+  margin-bottom: 1.75rem;
+  overflow: hidden;
+}
+
+.parlay-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.25rem;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.parlay-header:hover {
+  background: var(--row-hover);
+}
+
+.parlay-header-hint {
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.parlay-body {
+  padding: 0 1.25rem 1.25rem;
+  border-top: 1px solid var(--panel-border);
+}
+
+.parlay-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 600px) {
+  .parlay-inputs {
+    grid-template-columns: 1fr;
+  }
+}
+
+.parlay-win-checks {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.parlay-check-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--text);
+  cursor: pointer;
+  user-select: none;
+}
+
+.parlay-check-label input[type='checkbox'] {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.parlay-check-prob {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.parlay-combined-row td {
+  background: var(--tag-home-bg);
+  border-top: 1px solid var(--accent) !important;
+}
+
+/* ─────────────────────────────────────────────────────────
    TRANSITION for theme switch
 ───────────────────────────────────────────────────────── */
 *, *::before, *::after {

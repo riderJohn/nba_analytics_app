@@ -57,15 +57,85 @@ export interface PredictResponse {
   away_team_win_prob: number
 }
 
+// ── Full prediction ──────────────────────────────────────────────────────────
+
+export interface FullPredictRequest {
+  home_team_abbr: string
+  away_team_abbr: string
+  game_date: string
+  speed_mode?: boolean
+}
+
+export interface WinProbability {
+  classifier_prob: number
+  regression_prob: number
+  ensemble_prob: number
+}
+
+export interface PointPrediction {
+  home_pts: number
+  away_pts: number
+  home_resid_std: number
+  away_resid_std: number
+  spread: number
+  total: number
+}
+
+export interface FullPredictResponse {
+  home_team_abbr: string
+  away_team_abbr: string
+  game_date: string
+  predicted_winner: 'home' | 'away'
+  winner_confidence: number
+  win_probability: WinProbability
+  points: PointPrediction
+  regression_model_used: string
+  classifier_model_used: string
+  trained_before: string
+}
+
+// ── Parlay calculator ────────────────────────────────────────────────────────
+
+export interface ParlayRequest {
+  home_team_abbr: string
+  away_team_abbr: string
+  home_pts: number
+  away_pts: number
+  home_resid_std: number
+  away_resid_std: number
+  home_win_prob?: number
+  away_win_prob?: number
+  home_points_line: number | null
+  away_points_line: number | null
+  total_line: number | null
+  spread_line: number | null
+}
+
+export interface ParlayLeg {
+  label: string
+  prob_over: number
+  prob_under: number
+}
+
+export interface ParlayResponse {
+  legs: ParlayLeg[]
+  combined_prob: number
+}
+
+// ── History ──────────────────────────────────────────────────────────────────
+
 export interface PredictionHistoryEntry {
   id: number
   ran_at: Date
   home_team_abbr: string
   away_team_abbr: string
   game_date: string
-  model_name: string
   home_win_prob: number
   away_win_prob: number
+  home_pts: number
+  away_pts: number
+  spread: number
+  total: number
 }
 
 export type Theme = 'dark' | 'nba' | 'retro'

@@ -44,6 +44,14 @@ def build_feature_set(teams_rolling_stats, game_df, team_df):
         away_team_id = team_ids[team_ids['abbreviation'] == away_team_abbr]['team_id'].values[0]
         home_wl = game['wl'].values[0]
 
+        # Actual points for regression targets
+        home_pts_actual = game['pts'].values[0]
+        away_game = game_df[
+            (game_df['game_id'] == game_id) &
+            (game_df['matchup'].str.contains(' @ '))
+        ]
+        away_pts_actual = away_game['pts'].values[0] if len(away_game) > 0 else None
+
         home_prior = teams_rolling_stats[
             (teams_rolling_stats['team_id'] == home_team_id) & 
             (teams_rolling_stats['game_date'] < game_date)
@@ -68,8 +76,10 @@ def build_feature_set(teams_rolling_stats, game_df, team_df):
         row = {
             'game_id': game_id,
             'game_date': game_date,
-            'home_wl': home_wl, 
-            'home_rest_days': home_rest, 
+            'home_wl': home_wl,
+            'home_pts_actual': home_pts_actual,
+            'away_pts_actual': away_pts_actual,
+            'home_rest_days': home_rest,
             'away_rest_days': away_rest,
             **{f'home_{k}': v for k, v in home_stats.items()},
             **{f'away_{k}': v for k, v in away_stats.items()},

@@ -12,3 +12,7 @@ requests
 nba_api
 python-dotenv
 psycopg2-binary
+xgboost
+scipy
+xgboost
+scipy

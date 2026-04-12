@@ -1,43 +1,51 @@
 import pandas as pd
 from datetime import datetime
 from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from xgboost import XGBClassifier
 
 from app.api.services.features import build_matchup_features
 
-models = {
-    "Logistic Regression": LogisticRegression(max_iter=1000),
-    "Random Forest": RandomForestClassifier(n_estimators=100, random_state=42),
-    "Gradient Boosting": GradientBoostingClassifier(n_estimators=100, random_state=42)
+classification_models = {
+    "xgboost": XGBClassifier(
+        n_estimators=300, learning_rate=0.05, max_depth=4,
+        eval_metric="logloss", random_state=42
+    ),
+    "logistic": LogisticRegression(max_iter=1000),
 }
 
 def fit_evaluate_model(feature_set: pd.DataFrame, model: object, split_date: datetime | None = None, verbose: bool = True):
-    split_date = split_date or datetime.today()
+    split_date = pd.Timestamp(split_date) if split_date else pd.Timestamp.today()
 
-    drop_cols = [col for col in feature_set.columns if 
-             "rolling" not in col and 
-             "home_games_played" not in col and 
-             "away_games_played" not in col and 
+    feature_set = feature_set.copy()
+    feature_set['game_date'] = pd.to_datetime(feature_set['game_date'])
+
+    drop_cols = [col for col in feature_set.columns if
+             "rolling" not in col and
+             "home_games_played" not in col and
+             "away_games_played" not in col and
              "rest" not in col]
 
     X = feature_set.drop(columns = drop_cols)
     y = feature_set["home_wl"].astype(int)
 
-    train_mask = feature_set['game_date'] < split_date
-    X_train, y_train = X[train_mask], y[train_mask]
-    X_test, y_test = X[~train_mask], y[~train_mask]
-
-    model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
-    accuracy = accuracy_score(y_test, y_pred)
-    if verbose: 
+    if verbose:
+        # Evaluation mode: temporal train/test split
+        train_mask = feature_set['game_date'] < split_date
+        X_train, y_train = X[train_mask], y[train_mask]
+        X_test, y_test = X[~train_mask], y[~train_mask]
+        model.fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+        accuracy = accuracy_score(y_test, y_pred)
         print(f"Model accuracy: {accuracy:.2f}")
         print("Confusion Matrix:")
         print(confusion_matrix(y_test, y_pred))
         print("Classification Report:")
         print(classification_report(y_test, y_pred))
-    
+    else:
+        # Prediction mode: train on all available data before game_date
+        model.fit(X, y)
+
     return model, X, y
 
 def predict_game(home_team_abbr: str, 

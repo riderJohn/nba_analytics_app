@@ -19,9 +19,10 @@ export default function App() {
     <>
       <Navbar page={page} setPage={setPage} theme={theme} setTheme={setTheme} />
       <main className="content">
-        {page === 'schedule' && <Schedule />}
-        {page === 'games'    && <Games />}
-        {page === 'predict'  && <Predict />}
+        {/* Always mounted — hidden with CSS so state is preserved across tab switches */}
+        <div style={{ display: page === 'schedule' ? 'block' : 'none' }}><Schedule /></div>
+        <div style={{ display: page === 'games'    ? 'block' : 'none' }}><Games /></div>
+        <div style={{ display: page === 'predict'  ? 'block' : 'none' }}><Predict /></div>
       </main>
     </>
   )
