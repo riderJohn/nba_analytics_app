@@ -1,0 +1,48 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment
+.venv/
+env/
+venv/
+
+# Environment variables — never commit secrets
+.env
+.env.*
+
+# SQLite database
+*.db
+
+# VSCode settings
+.vscode/
+
+# Mac/Linux/Windows system files
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+frontend/dist/
+frontend/.vite/
+npm-debug.log*
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local Postgres data (if ever stored on disk)
+pgdata/
+
+# App directories excluded from repo
+/backend/app/scraping/
+/backend/app/testing/
+
+# Generated documentation
+/app/documentation/
