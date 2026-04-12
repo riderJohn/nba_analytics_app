@@ -1,0 +1,23 @@
+nba_analytics_app/
+├── app/                       # main package
+│   ├── __init__.py            # marks this as a package
+│   ├── __main__.py            # optional, allows 'python -m app' to run the app
+│   ├── core/                  # general utilities & configs
+│   │   ├── __init__.py
+│   │   └── config.py          # constants, paths, settings, etc.
+│   ├── db/                    # database logic
+│   │   ├── __init__.py
+│   │   └── database.py        # create tables, insert data, manage DB connection
+│   ├── models/                # Pydantic or data models
+│   │   ├── __init__.py
+│   │   └── game.py            # Game/Team models, etc.
+│   └── scraping/              # scraping logic
+│       ├── __init__.py
+│       └── scrape_data.py     # scraping functions, main scraper
+│
+├── database/                  # folder to hold SQLite database file or migrations
+│   └── data/                  # e.g., nba_data.db
+│
+├── requirements.txt           # single source of truth for pip packages
+├── .gitignore                 # ignore __pycache__, .venv, *.db, etc.
+└── README.md

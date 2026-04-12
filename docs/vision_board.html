@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NBA Analytics – Vision Board</title>
+  <style>
+
+    /* ─────────────────────────────────────────────
+       THEME DEFINITIONS
+       Switch by setting data-theme on <html>
+    ───────────────────────────────────────────── */
+
+    /* Glass — frosted dark, gradient bg */
+    [data-theme="glass"] {
+      --bg-grad-a:      #0d1b3e;
+      --bg-grad-b:      #0f1117;
+      --bg-grad-c:      #1a0d2e;
+      --panel-bg:       rgba(255,255,255,0.04);
+      --panel-blur:     16px;
+      --panel-border:   rgba(255,255,255,0.09);
+      --nav-bg:         rgba(13,27,62,0.55);
+      --nav-border:     rgba(255,255,255,0.08);
+      --table-head-bg:  rgba(0,0,0,0.25);
+      --row-hover:      rgba(255,255,255,0.04);
+      --input-bg:       rgba(255,255,255,0.06);
+      --input-border:   rgba(255,255,255,0.12);
+      --input-focus:    rgba(232,163,25,0.6);
+      --accent:         #e8a319;
+      --accent-btn-txt: #0a0a0a;
+      --text:           #e2e8f0;
+      --muted:          #8892b0;
+      --border:         rgba(255,255,255,0.08);
+      --win:            #68d391;
+      --loss:           #fc8181;
+      --tag-home-bg:    rgba(232,163,25,0.15);
+      --tag-away-bg:    rgba(136,146,176,0.12);
+    }
+
+    /* Midnight — solid surfaces, no blur */
+    [data-theme="midnight"] {
+      --bg-grad-a:      #0f1117;
+      --bg-grad-b:      #0f1117;
+      --bg-grad-c:      #0f1117;
+      --panel-bg:       #1a1d2e;
+      --panel-blur:     0px;
+      --panel-border:   #2d3561;
+      --nav-bg:         #141727;
+      --nav-border:     #2d3561;
+      --table-head-bg:  #141727;
+      --row-hover:      #1e2240;
+      --input-bg:       #1a1d2e;
+      --input-border:   #2d3561;
+      --input-focus:    #e8a319;
+      --accent:         #e8a319;
+      --accent-btn-txt: #0a0a0a;
+      --text:           #e2e8f0;
+      --muted:          #8892b0;
+      --border:         #2d3561;
+      --win:            #68d391;
+      --loss:           #fc8181;
+      --tag-home-bg:    rgba(232,163,25,0.12);
+      --tag-away-bg:    rgba(136,146,176,0.10);
+    }
+
+    /* Neon — cyberpunk cyan accent */
+    [data-theme="neon"] {
+      --bg-grad-a:      #040812;
+      --bg-grad-b:      #05080f;
+      --bg-grad-c:      #050c1a;
+      --panel-bg:       rgba(0,200,255,0.04);
+      --panel-blur:     18px;
+      --panel-border:   rgba(0,200,255,0.14);
+      --nav-bg:         rgba(4,8,18,0.7);
+      --nav-border:     rgba(0,200,255,0.12);
+      --table-head-bg:  rgba(0,0,0,0.4);
+      --row-hover:      rgba(0,200,255,0.05);
+      --input-bg:       rgba(0,200,255,0.05);
+      --input-border:   rgba(0,200,255,0.18);
+      --input-focus:    rgba(0,200,255,0.7);
+      --accent:         #00c8ff;
+      --accent-btn-txt: #000a14;
+      --text:           #d6f0ff;
+      --muted:          #5a8a9f;
+      --border:         rgba(0,200,255,0.12);
+      --win:            #57f0a0;
+      --loss:           #ff6b81;
+      --tag-home-bg:    rgba(0,200,255,0.12);
+      --tag-away-bg:    rgba(90,138,159,0.10);
+    }
+
+    /* ─────────────────────────────────────────────
+       BASE / RESET
+    ───────────────────────────────────────────── */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at 20% 10%, var(--bg-grad-a) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 90%, var(--bg-grad-c) 0%, transparent 60%),
+        var(--bg-grad-b);
+      color: var(--text);
+      padding: 2.5rem 2rem;
+      transition: background 0.4s;
+    }
+
+    /* ─────────────────────────────────────────────
+       VISION BOARD META
+    ───────────────────────────────────────────── */
+    .vb-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 3rem;
+    }
+    .vb-title h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+    }
+    .vb-title p {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 0.3rem;
+    }
+
+    /* Theme Switcher */
+    .theme-switcher {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.5rem;
+    }
+    .theme-switcher-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+    }
+    .theme-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .theme-btn {
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--panel-bg);
+      color: var(--muted);
+      backdrop-filter: blur(var(--panel-blur));
+      transition: all 0.2s;
+      letter-spacing: 0.3px;
+    }
+    .theme-btn:hover { color: var(--text); border-color: var(--accent); }
+    .theme-btn.active { color: var(--accent); border-color: var(--accent); background: rgba(232,163,25,0.08); }
+    [data-theme="neon"] .theme-btn.active { background: rgba(0,200,255,0.08); }
+
+    /* ─────────────────────────────────────────────
+       SECTION LABELS
+    ───────────────────────────────────────────── */
+    .section { margin-bottom: 3.5rem; }
+    .section-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ─────────────────────────────────────────────
+       COLOR PALETTE
+    ───────────────────────────────────────────── */
+    .palette { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .swatch { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+    .swatch-color {
+      width: 56px;
+      height: 56px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .swatch-name { font-size: 0.68rem; color: var(--muted); text-align: center; }
+    .swatch-hex  { font-size: 0.62rem; color: var(--muted); opacity: 0.5; font-family: monospace; }
+
+    /* ─────────────────────────────────────────────
+       APP SHELL
+    ───────────────────────────────────────────── */
+    .mockup-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .mockup-spacer { margin-bottom: 2.5rem; }
+
+    .app-shell {
+      border-radius: 14px;
+      border: 1px solid var(--panel-border);
+      overflow: hidden;
+      backdrop-filter: blur(var(--panel-blur));
+      background: var(--panel-bg);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+    }
+
+    /* ─────────────────────────────────────────────
+       NAVBAR
+    ───────────────────────────────────────────── */
+    .navbar {
+      background: var(--nav-bg);
+      border-bottom: 1px solid var(--nav-border);
+      padding: 0 1.75rem;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(var(--panel-blur));
+    }
+    .navbar-brand {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .brand-dot {
+      width: 7px; height: 7px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--accent);
+    }
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .navbar-links { display: flex; gap: 0.2rem; }
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 0.4rem 0.9rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .nav-btn:hover:not(.active) { color: var(--text); background: var(--row-hover); }
+    .nav-btn.active { color: var(--accent); }
+
+    /* Theme dots in nav (shown in mockup) */
+    .nav-theme-dots {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+    .nav-theme-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.2);
+      cursor: pointer;
+    }
+
+    /* ─────────────────────────────────────────────
+       PAGE CONTENT
+    ───────────────────────────────────────────── */
+    .page-content { padding: 1.75rem 1.75rem 2rem; }
+
+    .page-header { margin-bottom: 1.5rem; }
+    .page-header h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .page-header p {
+      color: var(--muted);
+      margin-top: 0.2rem;
+      font-size: 0.83rem;
+    }
+
+    /* ─────────────────────────────────────────────
+       CONTROLS
+    ───────────────────────────────────────────── */
+    .controls {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-end;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .control-group { display: flex; flex-direction: column; gap: 0.35rem; }
+    .control-group label {
+      font-size: 0.68rem;
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .fake-input {
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      color: var(--text);
+      padding: 0.45rem 0.75rem;
+      border-radius: 7px;
+      font-size: 0.85rem;
+      min-width: 130px;
+      backdrop-filter: blur(var(--panel-blur));
+    }
+    .fake-input.focused { border-color: var(--input-focus); }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--accent-btn-txt);
+      border: none;
+      padding: 0.47rem 1.2rem;
+      border-radius: 7px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      box-shadow: 0 0 18px rgba(232,163,25,0.25);
+    }
+    [data-theme="neon"] .btn-primary { box-shadow: 0 0 18px rgba(0,200,255,0.3); }
+
+    /* ─────────────────────────────────────────────
+       TABLE
+    ───────────────────────────────────────────── */
+    .table-wrapper {
+      border-radius: 10px;
+      border: 1px solid var(--panel-border);
+      overflow: hidden;
+      backdrop-filter: blur(var(--panel-blur));
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+    thead { background: var(--table-head-bg); }
+    thead th {
+      padding: 0.6rem 0.9rem;
+      text-align: left;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--panel-border);
+    }
+    tbody tr { border-bottom: 1px solid var(--panel-border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--row-hover); }
+    tbody td { padding: 0.65rem 0.9rem; color: var(--text); opacity: 0.9; }
+
+    .win  { color: var(--win);  font-weight: 600; }
+    .loss { color: var(--loss); font-weight: 600; }
+
+    .tag {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 5px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+    .tag-home { background: var(--tag-home-bg); color: var(--accent); }
+    .tag-away { background: var(--tag-away-bg); color: var(--muted); }
+
+    .correct   { color: var(--win);  font-weight: 600; }
+    .incorrect { color: var(--loss); font-weight: 600; }
+    .pending   { color: var(--muted); }
+
+    /* ─────────────────────────────────────────────
+       PREDICT PAGE
+    ───────────────────────────────────────────── */
+    .predict-top {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+      align-items: start;
+    }
+
+    /* Form — no card, just open layout */
+    .predict-form-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    .form-grid { display: grid; gap: 0.85rem; margin-bottom: 1.25rem; }
+    .select-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
+
+    /* Result — open layout */
+    .result-eyebrow {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+    }
+    .result-matchup {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+    .result-matchup strong { color: var(--text); }
+
+    .prob-block { margin-bottom: 1.1rem; }
+    .prob-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.4rem;
+    }
+    .prob-team { font-size: 0.9rem; font-weight: 500; color: var(--text); }
+    .prob-pct { font-size: 1.35rem; font-weight: 800; }
+    .prob-pct.high { color: var(--win); }
+    .prob-pct.low  { color: var(--loss); }
+
+    .bar-track {
+      height: 5px;
+      background: var(--panel-border);
+      border-radius: 3px;
+      overflow: hidden;
+      backdrop-filter: blur(4px);
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 70%, white));
+    }
+    .bar-fill.secondary {
+      background: linear-gradient(90deg, var(--muted), color-mix(in srgb, var(--muted) 80%, white));
+    }
+    .model-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.73rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+    }
+    .model-badge::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 5px var(--accent);
+    }
+
+    /* ─────────────────────────────────────────────
+       PREDICTION HISTORY
+    ───────────────────────────────────────────── */
+    .history-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .history-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+    }
+    .history-count {
+      font-size: 0.72rem;
+      color: var(--muted);
+      background: var(--input-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 20px;
+      padding: 0.15rem 0.6rem;
+      backdrop-filter: blur(var(--panel-blur));
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--panel-border);
+      margin: 2rem 0;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ─── Vision Board Header ─── -->
+  <div class="vb-meta">
+    <div class="vb-title">
+      <h1>NBA Analytics — Vision Board</h1>
+      <p>Source of truth for layout, color, and components. Switch themes below.</p>
+    </div>
+    <div class="theme-switcher">
+      <div class="theme-switcher-label">Theme</div>
+      <div class="theme-buttons">
+        <button class="theme-btn active" onclick="setTheme('glass', this)">Glass</button>
+        <button class="theme-btn"        onclick="setTheme('midnight', this)">Midnight</button>
+        <button class="theme-btn"        onclick="setTheme('neon', this)">Neon</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Color Palette ─── -->
+  <div class="section">
+    <div class="section-label">Color Palette</div>
+    <div class="palette">
+      <div class="swatch"><div class="swatch-color" style="background:#0f1117"></div><div class="swatch-name">Background</div><div class="swatch-hex">#0f1117</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#141727"></div><div class="swatch-name">Nav</div><div class="swatch-hex">#141727</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1)"></div><div class="swatch-name">Glass Panel</div><div class="swatch-hex">rgba(fff,0.04)</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#e8a319"></div><div class="swatch-name">Accent / Gold</div><div class="swatch-hex">#e8a319</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#e2e8f0"></div><div class="swatch-name">Text</div><div class="swatch-hex">#e2e8f0</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#8892b0"></div><div class="swatch-name">Muted</div><div class="swatch-hex">#8892b0</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#68d391"></div><div class="swatch-name">Win</div><div class="swatch-hex">#68d391</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#fc8181"></div><div class="swatch-name">Loss</div><div class="swatch-hex">#fc8181</div></div>
+    </div>
+  </div>
+
+  <!-- ─── Page Mockups ─── -->
+  <div class="section">
+    <div class="section-label">Page Mockups</div>
+
+    <!-- ── SCHEDULE ── -->
+    <div class="mockup-spacer">
+      <div class="mockup-label">Schedule Page</div>
+      <div class="app-shell">
+        <div class="navbar">
+          <div class="navbar-brand"><div class="brand-dot"></div>NBA Analytics</div>
+          <div class="navbar-right">
+            <div class="navbar-links">
+              <button class="nav-btn active">Schedule</button>
+              <button class="nav-btn">Games</button>
+              <button class="nav-btn">Predict</button>
+            </div>
+            <div class="nav-theme-dots">
+              <div class="nav-theme-dot" style="background:#e8a319" title="Glass"></div>
+              <div class="nav-theme-dot" style="background:#1a1d2e" title="Midnight"></div>
+              <div class="nav-theme-dot" style="background:#00c8ff" title="Neon"></div>
+            </div>
+          </div>
+        </div>
+        <div class="page-content">
+          <div class="page-header">
+            <h2>Schedule</h2>
+            <p>Games scheduled for a given date</p>
+          </div>
+          <div class="controls">
+            <div class="control-group">
+              <label>Date</label>
+              <div class="fake-input focused">2025-04-06</div>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Game ID</th>
+                  <th>Home</th>
+                  <th>Away</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="font-family:monospace;font-size:0.78rem;opacity:0.6">0022401042</td>
+                  <td><span class="tag tag-home">BOS</span></td>
+                  <td><span class="tag tag-away">NYK</span></td>
+                </tr>
+                <tr>
+                  <td style="font-family:monospace;font-size:0.78rem;opacity:0.6">0022401043</td>
+                  <td><span class="tag tag-home">LAL</span></td>
+                  <td><span class="tag tag-away">GSW</span></td>
+                </tr>
+                <tr>
+                  <td style="font-family:monospace;font-size:0.78rem;opacity:0.6">0022401044</td>
+                  <td><span class="tag tag-home">MIA</span></td>
+                  <td><span class="tag tag-away">CHI</span></td>
+                </tr>
+                <tr>
+                  <td style="font-family:monospace;font-size:0.78rem;opacity:0.6">0022401045</td>
+                  <td><span class="tag tag-home">DEN</span></td>
+                  <td><span class="tag tag-away">PHX</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── GAMES ── -->
+    <div class="mockup-spacer">
+      <div class="mockup-label">Games Page</div>
+      <div class="app-shell">
+        <div class="navbar">
+          <div class="navbar-brand"><div class="brand-dot"></div>NBA Analytics</div>
+          <div class="navbar-right">
+            <div class="navbar-links">
+              <button class="nav-btn">Schedule</button>
+              <button class="nav-btn active">Games</button>
+              <button class="nav-btn">Predict</button>
+            </div>
+            <div class="nav-theme-dots">
+              <div class="nav-theme-dot" style="background:#e8a319"></div>
+              <div class="nav-theme-dot" style="background:#1a1d2e"></div>
+              <div class="nav-theme-dot" style="background:#00c8ff"></div>
+            </div>
+          </div>
+        </div>
+        <div class="page-content">
+          <div class="page-header">
+            <h2>Game Results</h2>
+            <p>Historical game logs by date range</p>
+          </div>
+          <div class="controls">
+            <div class="control-group">
+              <label>Start Date</label>
+              <div class="fake-input">2025-04-01</div>
+            </div>
+            <div class="control-group">
+              <label>End Date</label>
+              <div class="fake-input focused">2025-04-06</div>
+            </div>
+            <button class="btn-primary">Search</button>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th><th>Matchup</th><th>W/L</th><th>PTS</th>
+                  <th>FG%</th><th>3P%</th><th>FT%</th><th>REB</th>
+                  <th>AST</th><th>STL</th><th>BLK</th><th>TOV</th><th>+/-</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>2025-04-04</td><td>BOS vs. NYK</td><td class="win">W</td><td>118</td>
+                  <td>48.2%</td><td>38.5%</td><td>82.1%</td><td>44</td>
+                  <td>28</td><td>8</td><td>5</td><td>11</td><td class="win">+9</td>
+                </tr>
+                <tr>
+                  <td>2025-04-04</td><td>NYK @ BOS</td><td class="loss">L</td><td>109</td>
+                  <td>44.1%</td><td>33.3%</td><td>78.9%</td><td>38</td>
+                  <td>22</td><td>6</td><td>3</td><td>14</td><td class="loss">-9</td>
+                </tr>
+                <tr>
+                  <td>2025-04-03</td><td>LAL vs. GSW</td><td class="win">W</td><td>124</td>
+                  <td>51.0%</td><td>40.2%</td><td>77.5%</td><td>47</td>
+                  <td>31</td><td>9</td><td>6</td><td>9</td><td class="win">+11</td>
+                </tr>
+                <tr>
+                  <td>2025-04-03</td><td>GSW @ LAL</td><td class="loss">L</td><td>113</td>
+                  <td>45.8%</td><td>36.1%</td><td>80.0%</td><td>40</td>
+                  <td>26</td><td>7</td><td>4</td><td>12</td><td class="loss">-11</td>
+                </tr>
+                <tr>
+                  <td>2025-04-02</td><td>MIA vs. CHI</td><td class="win">W</td><td>108</td>
+                  <td>46.3%</td><td>35.7%</td><td>85.0%</td><td>42</td>
+                  <td>24</td><td>10</td><td>4</td><td>10</td><td class="win">+5</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PREDICT ── -->
+    <div class="mockup-spacer">
+      <div class="mockup-label">Predict Page</div>
+      <div class="app-shell">
+        <div class="navbar">
+          <div class="navbar-brand"><div class="brand-dot"></div>NBA Analytics</div>
+          <div class="navbar-right">
+            <div class="navbar-links">
+              <button class="nav-btn">Schedule</button>
+              <button class="nav-btn">Games</button>
+              <button class="nav-btn active">Predict</button>
+            </div>
+            <div class="nav-theme-dots">
+              <div class="nav-theme-dot" style="background:#e8a319"></div>
+              <div class="nav-theme-dot" style="background:#1a1d2e"></div>
+              <div class="nav-theme-dot" style="background:#00c8ff"></div>
+            </div>
+          </div>
+        </div>
+        <div class="page-content">
+          <div class="page-header">
+            <h2>Predict</h2>
+            <p>Get win probability for a matchup using historical rolling stats</p>
+          </div>
+
+          <!-- Top: form + result side by side -->
+          <div class="predict-top">
+
+            <!-- Form (no card, open layout) -->
+            <div>
+              <div class="predict-form-title">Matchup Setup</div>
+              <div class="form-grid">
+                <div class="select-row">
+                  <div class="control-group">
+                    <label>Home Team</label>
+                    <div class="fake-input">BOS – Celtics</div>
+                  </div>
+                  <div class="control-group">
+                    <label>Away Team</label>
+                    <div class="fake-input">NYK – Knicks</div>
+                  </div>
+                </div>
+                <div class="control-group">
+                  <label>Game Date</label>
+                  <div class="fake-input focused">2025-04-10</div>
+                </div>
+                <div class="control-group">
+                  <label>Model</label>
+                  <div class="fake-input">Gradient Boosting</div>
+                </div>
+              </div>
+              <button class="btn-primary" style="width:100%">Run Prediction</button>
+            </div>
+
+            <!-- Result (open layout) -->
+            <div>
+              <div class="result-eyebrow">Result</div>
+              <div class="result-matchup">
+                <strong>BOS</strong> (Home) vs <strong>NYK</strong> (Away)
+                &nbsp;·&nbsp; Apr 10, 2025 &nbsp;·&nbsp; Gradient Boosting
+              </div>
+              <div class="prob-block">
+                <div class="prob-row">
+                  <span class="prob-team">Boston Celtics (Home)</span>
+                  <span class="prob-pct high">63.2%</span>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-fill" style="width:63.2%"></div>
+                </div>
+              </div>
+              <div class="prob-block">
+                <div class="prob-row">
+                  <span class="prob-team">New York Knicks (Away)</span>
+                  <span class="prob-pct low">36.8%</span>
+                </div>
+                <div class="bar-track">
+                  <div class="bar-fill secondary" style="width:36.8%"></div>
+                </div>
+              </div>
+              <div class="model-badge">Gradient Boosting · 100 estimators · trained on data before Apr 10, 2025</div>
+            </div>
+          </div>
+
+          <!-- Divider -->
+          <div class="divider"></div>
+
+          <!-- Prediction History -->
+          <div class="history-header">
+            <div class="history-title">Previous Predictions</div>
+            <div class="history-count">5 runs this session</div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Run At</th>
+                  <th>Home</th>
+                  <th>Away</th>
+                  <th>Game Date</th>
+                  <th>Model</th>
+                  <th>Home%</th>
+                  <th>Away%</th>
+                  <th>Outcome</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="opacity:0.5;font-size:0.78rem">just now</td>
+                  <td><span class="tag tag-home">BOS</span></td>
+                  <td><span class="tag tag-away">NYK</span></td>
+                  <td>Apr 10</td>
+                  <td style="opacity:0.65;font-size:0.8rem">Grad. Boost</td>
+                  <td class="win">63.2%</td>
+                  <td class="loss">36.8%</td>
+                  <td class="pending">Pending</td>
+                </tr>
+                <tr>
+                  <td style="opacity:0.5;font-size:0.78rem">2m ago</td>
+                  <td><span class="tag tag-home">LAL</span></td>
+                  <td><span class="tag tag-away">GSW</span></td>
+                  <td>Apr 6</td>
+                  <td style="opacity:0.65;font-size:0.8rem">Rand. Forest</td>
+                  <td class="win">58.1%</td>
+                  <td class="loss">41.9%</td>
+                  <td class="correct">✓ Correct</td>
+                </tr>
+                <tr>
+                  <td style="opacity:0.5;font-size:0.78rem">5m ago</td>
+                  <td><span class="tag tag-home">MIA</span></td>
+                  <td><span class="tag tag-away">CHI</span></td>
+                  <td>Apr 5</td>
+                  <td style="opacity:0.65;font-size:0.8rem">Log. Reg.</td>
+                  <td class="loss">44.7%</td>
+                  <td class="win">55.3%</td>
+                  <td class="incorrect">✗ Wrong</td>
+                </tr>
+                <tr>
+                  <td style="opacity:0.5;font-size:0.78rem">8m ago</td>
+                  <td><span class="tag tag-home">DEN</span></td>
+                  <td><span class="tag tag-away">PHX</span></td>
+                  <td>Apr 4</td>
+                  <td style="opacity:0.65;font-size:0.8rem">Grad. Boost</td>
+                  <td class="win">61.0%</td>
+                  <td class="loss">39.0%</td>
+                  <td class="correct">✓ Correct</td>
+                </tr>
+                <tr>
+                  <td style="opacity:0.5;font-size:0.78rem">12m ago</td>
+                  <td><span class="tag tag-home">MIL</span></td>
+                  <td><span class="tag tag-away">IND</span></td>
+                  <td>Apr 3</td>
+                  <td style="opacity:0.65;font-size:0.8rem">Rand. Forest</td>
+                  <td class="win">54.4%</td>
+                  <td class="loss">45.6%</td>
+                  <td class="correct">✓ Correct</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end section -->
+
+  <script>
+    function setTheme(name, btn) {
+      document.documentElement.setAttribute('data-theme', name);
+      document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+  </script>
+</body>
+</html>
