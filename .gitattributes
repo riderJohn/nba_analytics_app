@@ -1,0 +1,7 @@
+# Exclude notebooks from GitHub Linguist language stats
+*.ipynb linguist-detectable=false
+
+# Ensure Python and TypeScript are detected
+*.py linguist-detectable=true
+*.ts linguist-detectable=true
+*.tsx linguist-detectable=true
