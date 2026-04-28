@@ -1,7 +1,7 @@
-# Requirements: NBA Analytics Platform
+# Requirements: Sports Analytics Platform
 
 **Defined:** 2026-04-27
-**Core Value:** A sharp bettor can see tonight's NBA games, get predictions from multiple platform models, compare to Vegas lines to find edge, and evaluate each model's honest CLV-based track record — because a model's history against the closing line is the only proof that matters.
+**Core Value:** A sharp bettor can see tonight's NBA or MLB games, get predictions from multiple platform models, compare to Vegas lines to find edge, and evaluate each model's honest CLV-based track record — because a model's history against the closing line is the only proof that matters.
 
 ## v1 Requirements
 
@@ -33,6 +33,17 @@ These are prerequisites — every CLV and track record feature downstream depend
 - [ ] **PARS-01**: Parlay calculator uses correlated probability — replaces naive independent-leg multiplication with historical conditional joint frequency tables built from existing game data; displayed alongside naive calculation so the difference is visible
 - [ ] **PARS-02**: User can see expected value for a parlay — combined EV calculated from correlated probabilities vs sportsbook payout odds; surfaced as positive/negative signal
 
+### MLB Integration
+
+- [ ] **MLB-01**: MLB game data ingested from pybaseball or MLB Stats API with incremental sync — same startup pattern as NBA ingestion
+- [ ] **MLB-02**: ML prediction pipeline built for MLB games — win probability and run line predictions using baseball-appropriate rolling features (ERA, WHIP, batting average, bullpen usage)
+- [ ] **MLB-03**: MLB odds ingested via The Odds API — same `odds_snapshots` table extended with a `sport` column; MLB game lines polled on same schedule as NBA
+- [ ] **MLB-04**: MLB predictions persisted to `prediction_log` with `sport` identifier — same immutable snapshot pattern as NBA
+- [ ] **MLB-05**: MLB closing lines captured by the same scheduled job as NBA — `sport` column distinguishes records
+- [ ] **MLB-06**: MLB CLV computed by the same nightly reconciliation job — `prediction_outcomes` extended to be sport-aware
+- [ ] **MLB-07**: User can switch between NBA and MLB in the UI — sport selector shows tonight's games and predictions for the chosen sport
+- [ ] **MLB-08**: MLB model leaderboard shows same CLV/ROI/sample-size stats as NBA — filtered by sport, same trust signals
+
 ## v2 Requirements
 
 ### User Models
@@ -44,7 +55,6 @@ These are prerequisites — every CLV and track record feature downstream depend
 ### Multi-Sport
 
 - **MSPT-01**: User can access analytics for NFL games
-- **MSPT-02**: User can access analytics for MLB games
 
 ### Social / Competition
 
@@ -91,12 +101,20 @@ These are prerequisites — every CLV and track record feature downstream depend
 | CLV-04 | Phase 4 | Pending |
 | PARS-01 | Phase 5 | Pending |
 | PARS-02 | Phase 5 | Pending |
+| MLB-01 | Phase 6 | Pending |
+| MLB-02 | Phase 6 | Pending |
+| MLB-03 | Phase 6 | Pending |
+| MLB-04 | Phase 6 | Pending |
+| MLB-05 | Phase 6 | Pending |
+| MLB-06 | Phase 6 | Pending |
+| MLB-07 | Phase 6 | Pending |
+| MLB-08 | Phase 6 | Pending |
 
 **Coverage:**
-- v1 requirements: 14 total
-- Mapped to phases: 14
+- v1 requirements: 22 total
+- Mapped to phases: 22
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-04-27*
-*Last updated: 2026-04-27 after initial definition*
+*Last updated: 2026-04-27 after adding MLB as v1 sport*

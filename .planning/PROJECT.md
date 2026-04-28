@@ -1,12 +1,12 @@
-# NBA Analytics Platform
+# Sports Analytics Platform
 
 ## What This Is
 
-A sports analytics web app starting with the NBA that bridges advanced predictive modeling with sportsbook odds comparison. Sharp bettors use it to find edge — seeing where platform-provided ML models disagree with Vegas lines, and trusting those models because their historical performance is shown transparently using closing line value (CLV), the gold standard metric no mainstream competitor reports honestly. Built by two part-time developers with a serious product ambition.
+A multi-sport analytics web app — starting with NBA and MLB — that bridges advanced predictive modeling with sportsbook odds comparison. Sharp bettors use it to find edge: seeing where platform-provided ML models disagree with Vegas lines, and trusting those models because their historical performance is shown transparently using closing line value (CLV), the gold standard metric no mainstream competitor reports honestly. NBA and MLB together provide year-round data collection with no dead periods. Built by two part-time developers with a serious product ambition.
 
 ## Core Value
 
-A sharp bettor can see tonight's NBA games, get win probability and point predictions from multiple platform models, compare those to current Vegas lines to find value, and evaluate each model's honest CLV-based track record — because a model's history against the closing line is the only proof that matters.
+A sharp bettor can see tonight's NBA or MLB games, get win probability predictions from multiple platform models, compare those to current Vegas lines to find edge, and evaluate each model's honest CLV-based track record — because a model's history against the closing line is the only proof that matters.
 
 ## Requirements
 
@@ -37,11 +37,15 @@ A sharp bettor can see tonight's NBA games, get win probability and point predic
 - [ ] Odds comparison UI: model implied probability vs current Vegas line, EV calculation surfaced to user
 - [ ] Multiple named platform models available (logistic, XGBoost, ensemble, possibly others) each with independent track records
 - [ ] Prediction logging infrastructure: pre-game snapshot → closing line capture → CLV reconciliation pipeline
+- [ ] MLB data ingestion from pybaseball or MLB Stats API with incremental sync
+- [ ] MLB ML prediction pipeline (win probability, run line) with baseball-appropriate features
+- [ ] Full CLV pipeline extended to MLB — same odds/logging/reconciliation architecture, sport-aware
+- [ ] Sport selector UI — user can switch between NBA and MLB, each with their own leaderboard
 
 ### Out of Scope
 
 - User-built models (no-code/low-code model builder) — v2, after core platform is solid
-- Multi-sport expansion beyond NBA — v2, NBA depth first
+- NFL and other sports — v2, establish NBA + MLB first
 - Bracket/league competition with fake betting — v2, needs analytics foundation first
 - Real-money features or actual sportsbook integration — regulatory complexity, not the product
 - Mobile app — web-first

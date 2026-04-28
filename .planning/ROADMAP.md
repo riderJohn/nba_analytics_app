@@ -1,8 +1,8 @@
-# Roadmap: NBA Analytics Platform
+# Roadmap: Sports Analytics Platform
 
 ## Overview
 
-Starting from a working FastAPI + React prediction engine, this roadmap delivers the CLV-based track record layer that makes the platform genuinely useful to sharp bettors. The first two phases make the existing system correct and stable. The middle phases build the odds ingestion, prediction logging, and CLV reconciliation pipeline. The final phase upgrades the parlay calculator with correlated probabilities.
+Starting from a working FastAPI + React prediction engine, this roadmap delivers the CLV-based track record layer that makes the platform genuinely useful to sharp bettors, then extends it to MLB. The first two phases make the existing system correct and stable. The middle phases build the odds ingestion, prediction logging, and CLV reconciliation pipeline for NBA. Phase 5 upgrades the parlay calculator with correlated probabilities. Phase 6 extends the full platform to MLB — timed to launch as the NBA season ends so data collection continues year-round with no gap.
 
 ## Phases
 
@@ -17,6 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 3: Odds & Prediction Pipeline** - Ingest live Vegas lines, persist every prediction at call time, and record closing lines for CLV reconciliation
 - [ ] **Phase 4: CLV Dashboard & Odds UI** - Surface model track records and odds comparison to the user — the core value proposition
 - [ ] **Phase 5: Correlated Parlay Engine** - Replace naive leg multiplication with historical conditional frequency tables and surface parlay EV
+- [ ] **Phase 6: MLB Integration** - Extend the full platform to MLB — data ingestion, predictions, odds, CLV pipeline, and leaderboard with sport switcher UI
 
 ## Phase Details
 
@@ -75,10 +76,23 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: TBD
 **UI hint**: yes
 
+### Phase 6: MLB Integration
+**Goal**: The full platform — data ingestion, predictions, odds comparison, CLV pipeline, and leaderboard — extended to MLB, with a sport switcher UI so users can move between NBA and MLB seamlessly
+**Depends on**: Phase 4 (CLV pipeline proven on NBA first)
+**Requirements**: MLB-01, MLB-02, MLB-03, MLB-04, MLB-05, MLB-06, MLB-07, MLB-08
+**Note**: Phases 3 and 4 should build with a `sport` column in `odds_snapshots`, `prediction_log`, and `prediction_outcomes` from the start — this avoids a migration when Phase 6 lands.
+**Success Criteria** (what must be TRUE):
+  1. User can select NBA or MLB via a sport switcher and see tonight's games with current odds for the chosen sport
+  2. MLB predictions are persisted and reconciled through the same CLV pipeline as NBA — `prediction_log` and `prediction_outcomes` both contain MLB records
+  3. MLB model leaderboard shows mean CLV, ROI, win rate, sample size, and confidence intervals — same trust signals as NBA, filtered by sport
+  4. MLB data ingestion runs on the same startup incremental-sync pattern as NBA — no manual seeding required after initial seed
+**Plans**: TBD
+**UI hint**: yes
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -87,3 +101,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 3. Odds & Prediction Pipeline | 0/TBD | Not started | - |
 | 4. CLV Dashboard & Odds UI | 0/TBD | Not started | - |
 | 5. Correlated Parlay Engine | 0/TBD | Not started | - |
+| 6. MLB Integration | 0/TBD | Not started | - |
